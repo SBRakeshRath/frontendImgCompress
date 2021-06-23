@@ -1,0 +1,82 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<img src= "" />
+<button onclick = "clicked(event)"> click to change pic</button>
+
+<script type="text/javascript">
+	const Pro_pic = document.querySelector("img");
+// console.log(Pro_pic);
+
+
+
+function changeProfilePic(e, Pro_pic, form) {
+  console.log("hallo");
+  const pic_dim = {
+    w: 250,
+    h: 250,
+  };
+  const imgIn = document.createElement("input");
+  imgIn.type = "file";
+  imgIn.accept = "image/*";
+  imgIn.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    const objUrl = URL.createObjectURL(file);
+    var img = new Image();
+    img.src = objUrl;
+    img.onload = (e) => {
+      const ratio = {
+        h: img.height / img.width,
+
+        v: img.width / img.height,
+      };
+
+      // canvas element
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = pic_dim.w;
+      canvas.height = pic_dim.h;
+      const newImfDim = {
+        w: 0,
+        h: 0,
+      };
+
+      if (ratio.v < 1) {
+        newImfDim.w = pic_dim.w;
+        newImfDim.h = pic_dim.h / ratio.v;
+      } else {
+        newImfDim.w = pic_dim.w / ratio.h;
+        newImfDim.h = pic_dim.h;
+      }
+
+      console.log(newImfDim);
+      canvas.style.margin = "20px 20px";
+      ctx.drawImage(
+        img,
+        -(newImfDim.w - pic_dim.w) / 2,
+        -(newImfDim.h - pic_dim.h) / 2,
+        newImfDim.w,
+        newImfDim.h
+      );
+
+      Pro_pic.src = canvas.toDataURL();
+      form.insertBefore(canvas, form.firstChild);
+    };
+  });
+  imgIn.click();
+}
+
+function clicked(e){
+  console.log(e);
+  changeProfilePic(e, Pro_pic, document.body);
+}
+</script>
+</body>
+</html>
